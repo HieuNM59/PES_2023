@@ -1,0 +1,5 @@
+../user/main-app.c:21:17:getTimeElapse	24	static
+../user/main-app.c:30:13:Debug_SendStr	16	static
+../user/main-app.c:36:6:main_Init	8	static
+../user/main-app.c:42:6:Debug_ButtonPrintfState	8	static
+../user/main-app.c:87:6:main_process	24	static
