@@ -19,12 +19,9 @@
 
 /* Structure ---------------------------------------------------------*/
 
-extern UART_HandleTypeDef huart2;
 /* Public variables -------------------------------------------------*/
-unsigned char PS2_CONFIGMODE[5] = {0x01, 0x43, 0x00, 0x01, 0x00};
-unsigned char PS2_ANALOGMODE[9] = {0x01, 0x44, 0x00, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00};
-pes_button_t pesButton;
 
+pes_button_t pesButton;
 
 unsigned char access(unsigned int tbyte){
 	unsigned char rbyte = 0, tempp = 0;
@@ -45,6 +42,9 @@ unsigned char access(unsigned int tbyte){
 	return rbyte;
 }
 
+/**
+ * Get digital datain transmit module
+ */
 void getPesRawData(uint8_t *pData){
 	uint8_t analog = 128;
 	HAL_GPIO_WritePin(PES_ATT_GPIO_Port,PES_ATT_Pin,GPIO_PIN_RESET);
@@ -68,23 +68,9 @@ void getPesRawData(uint8_t *pData){
 	HAL_GPIO_WritePin(PES_ATT_GPIO_Port,PES_ATT_Pin,GPIO_PIN_SET);
 }
 
-void send_ps2 (unsigned char *cmd, unsigned char length){
-	int i;
-	HAL_GPIO_WritePin(PES_ATT_GPIO_Port,PES_ATT_Pin,GPIO_PIN_RESET);
-	DWT_Delay_us(10);
-	for(i=0;i<length;i++)
-	access(cmd[i]);
-	DWT_Delay_us(10);
-	HAL_GPIO_WritePin(PES_ATT_GPIO_Port,PES_ATT_Pin,GPIO_PIN_SET);
-}
-
-void ps_2_int(void){
-	send_ps2(PS2_CONFIGMODE, 5);
-	DWT_Delay_us(10);
-	send_ps2(PS2_ANALOGMODE, 9);
-	DWT_Delay_us(10);
-}
-
+/*
+ *  Get analog in Transmit module
+ */
 uint8_t getPesAnalog(uint8_t *pesRawData){
 	uint8_t analog;
 
@@ -119,7 +105,9 @@ uint8_t getPesAnalog(uint8_t *pesRawData){
 	return analog;
 }
 
-
+/**
+ *  use for Debug transmit module
+ */
 void decodePES_1(uint8_t *PES){
 	pesButton.Select 	= (PES[0] & 0x01);
 	pesButton.L 		= (PES[0] & 0x02) >> 1;
@@ -141,17 +129,22 @@ void decodePES_1(uint8_t *PES){
 	pesButton.X 		= (PES[1] & 0x40) >> 6;
 	pesButton.Vuong 	= (PES[1] & 0x80) >> 7;
 }
-/* Receive Pes Data --------------------------------------------------*/
 
+/*This code used for receive Pes Data  --------------------------------------------------*/
 
+/* Coppy and paste to Public variable ------------------------------------------------*/
 UART_HandleTypeDef* UartReceive;
 uint8_t u8_pesData;
 uint16_t pesDigitalRawData = 0xFFFF;
+
+/* Coppy and paste to main init ------------------------------------------------*/
 
 void pes_receive_init(UART_HandleTypeDef* pUart){
 	UartReceive = pUart;
 	HAL_UART_Receive_IT(UartReceive, &u8_pesData, 1);
 }
+
+/* Coppy and paste to main loop ------------------------------------------------*/
 
 void decodePES(void){
 	uint8_t pesData[2];
@@ -181,7 +174,12 @@ void decodePES(void){
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	pes_uart_event_handle(huart);
+}
 
+/* Coppy and paste to HAL_UART_RxCpltCallback ------------------------------------------------*/
+
+void pes_uart_event_handle(UART_HandleTypeDef *huart){
 	static uint8_t byHeadIsTrue = 0;
 	static uint8_t i_pes = 0;
 	static uint8_t pesBuff[3];

@@ -12,10 +12,13 @@
 #define SIZE_OF_PAYLOAD 			4
 #define TIME_POLL_PES				20	//ms
 
+//#define USE_DEBUG_IN_ONE_BOARD
+
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 
 static void Debug_SendStr(char *pString);
+
 static uint32_t getTimeElapse(uint32_t timeStart);
 
 static uint32_t getTimeElapse(uint32_t timeStart){
@@ -27,18 +30,67 @@ static uint32_t getTimeElapse(uint32_t timeStart){
 
 }
 
+/*
+ * use for debug in uart2( tx is PA2)
+ */
 static void Debug_SendStr(char *pString) {
     while (*pString != NULL) {
     	HAL_UART_Transmit(&huart2,(uint8_t*) pString, 1, 100);
         pString++;
     }
 }
+/*
+ * Main Init
+ */
 void main_Init(void){
 	DWT_Delay_Init();
 	pes_receive_init(&huart3);
 	Debug_SendStr("Main Init! \n");
 }
 
+/*
+ * Tần số SysCoreClock nên để 8Mhz như đã cấu hình, Cấu hình cao dễ gây nhiễu.
+ * Đã Cấu hình I watchdog (500ms) để tránh việc treo MCU -> Không nên bỏ.
+ */
+void main_process(void){
+	static uint32_t ticks = 0;
+	uint8_t PES[6] = {0, };
+	uint8_t analogValue = 0xFF;
+	uint8_t payload[SIZE_OF_PAYLOAD] = {0, };
+
+	/*
+	 * Do tốc độ truyền của RF(HC-05) là có giới hạn băng thông và tốc độ,
+	 * Nên cần thay đổi thời gian TIME_POLL_PES(Nên để 20 -> 50ms),
+	 * Tránh việc bắn Uart liên tục gây quá tải HC-05 -> HC-05 bị reboot -> mất kết nối PS2
+	 */
+	if(getTimeElapse(ticks) >= TIME_POLL_PES){
+		getPesRawData(PES);
+
+		analogValue = getPesAnalog(PES);
+
+		payload[0] = 'F';			/* Header bytee */
+		payload[1] = PES[0];		/* Low byte digital data */
+		payload[2] = PES[1];		/* High byte digital data */
+		payload[3] = analogValue;	/* Analog data */
+
+		HAL_UART_Transmit(&huart3, payload, SIZE_OF_PAYLOAD, 200);
+		ticks = HAL_GetTick();
+	}
+
+	/* Use to debug in only one board.
+	 * connect Uart 3 TX -> Uart3 RX (PB10 -> PB11)
+	 * Debug printing in Uart 2 TX (PA2)
+	 */
+#ifdef USE_DEBUG_IN_ONE_BOARD
+	decodePES();
+	Debug_ButtonPrintfState();
+#endif
+
+}
+
+/*
+ * used for debug button in uart2
+ */
 void Debug_ButtonPrintfState(void){
 	if(!pesButton.Up){
 		Debug_SendStr("Button Up is press!\n");
@@ -82,28 +134,4 @@ void Debug_ButtonPrintfState(void){
 	else if(!pesButton.X){
 		Debug_SendStr("Button X is press!\n");
 	}
-}
-
-void main_process(void){
-	static uint32_t ticks = 0;
-	uint8_t PES[6] = {0, };
-	uint8_t analogValue = 0xFF;
-	uint8_t payload[SIZE_OF_PAYLOAD] = {0, };
-
-	if(getTimeElapse(ticks) >= TIME_POLL_PES){
-		getPesRawData(PES);
-
-		analogValue = getPesAnalog(PES);
-
-		payload[0] = 'F';			/* Header bytee */
-		payload[1] = PES[0];		/* Low byte digital data */
-		payload[2] = PES[1];		/* High byte digital data */
-		payload[3] = analogValue;	/* Analog data */
-
-		HAL_UART_Transmit(&huart3, payload, SIZE_OF_PAYLOAD, 200);
-		ticks = HAL_GetTick();
-	}
-
-	decodePES();
-	Debug_ButtonPrintfState();
 }
