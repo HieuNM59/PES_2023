@@ -49,5 +49,5 @@ void decodePES_1(uint8_t *PES);
 void getPesRawData(uint8_t *pData);
 uint8_t getPesAnalog(uint8_t *pesRawData);
 void pes_uart_event_handle(UART_HandleTypeDef *huart);
-
+void ps2_EnableAnalogMode(void);
 #endif /* USER_PS2_H_ */
