@@ -44,7 +44,8 @@ static void Debug_SendStr(char *pString) {
  */
 void main_Init(void){
 	DWT_Delay_Init();
-	pes_receive_init(&huart3);
+	ps2_EnableAnalogMode();
+//	pes_receive_init(&huart3);
 	Debug_SendStr("Main Init! \n");
 }
 

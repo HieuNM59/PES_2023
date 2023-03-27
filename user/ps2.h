@@ -30,6 +30,16 @@ typedef struct _PES_BUTTON_
   uint16_t R2:1;
   uint16_t L2:1;
 }pes_button_t;
+typedef struct _PES_JOY_STICk_
+{
+	struct{
+		  uint8_t Up:1;
+		  uint8_t Down:1;
+		  uint8_t Right:1;
+		  uint8_t Left:1;
+	}right_b, left_b;
+}pes_joyStick_t;
+
 
 extern pes_button_t pesButton;
 void pes_receive_init(UART_HandleTypeDef* pUart);

@@ -510,10 +510,14 @@ Discarded input sections
  .bss           0x0000000000000000        0x0 ./user/ps2.o
  .bss.pesButton
                 0x0000000000000000        0x2 ./user/ps2.o
+ .bss.pesJoyStick
+                0x0000000000000000        0x2 ./user/ps2.o
  .text.decodePES_1
                 0x0000000000000000      0x188 ./user/ps2.o
+ .text.pes_receive_init
+                0x0000000000000000       0x2c ./user/ps2.o
  .text.decodePES
-                0x0000000000000000      0x16c ./user/ps2.o
+                0x0000000000000000      0x224 ./user/ps2.o
  .text          0x0000000000000000        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-errno.o)
  .data          0x0000000000000000        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-errno.o)
  .bss           0x0000000000000000        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-errno.o)
@@ -624,7 +628,7 @@ LOAD c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
                 0x0000000008000000                g_pfnVectors
                 0x000000000800010c                . = ALIGN (0x4)
 
-.text           0x000000000800010c     0x24fc
+.text           0x000000000800010c     0x2580
                 0x000000000800010c                . = ALIGN (0x4)
  *(.text)
  .text          0x000000000800010c       0x40 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
@@ -860,118 +864,121 @@ LOAD c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
  .text.Debug_SendStr
                 0x0000000008002148       0x34 ./user/main-app.o
  .text.main_Init
-                0x000000000800217c       0x20 ./user/main-app.o
+                0x000000000800217c       0x1c ./user/main-app.o
                 0x000000000800217c                main_Init
  .text.main_process
-                0x000000000800219c       0x74 ./user/main-app.o
-                0x000000000800219c                main_process
+                0x0000000008002198       0x74 ./user/main-app.o
+                0x0000000008002198                main_process
  .text.DWT_Delay_us
-                0x0000000008002210       0x48 ./user/ps2.o
- .text.access   0x0000000008002258       0xa4 ./user/ps2.o
-                0x0000000008002258                access
+                0x000000000800220c       0x48 ./user/ps2.o
+ .text.access   0x0000000008002254       0xa4 ./user/ps2.o
+                0x0000000008002254                access
+ .text.ps2_SendConfig
+                0x00000000080022f8       0x60 ./user/ps2.o
+                0x00000000080022f8                ps2_SendConfig
+ .text.ps2_EnableAnalogMode
+                0x0000000008002358       0x48 ./user/ps2.o
+                0x0000000008002358                ps2_EnableAnalogMode
  .text.getPesRawData
-                0x00000000080022fc       0xd0 ./user/ps2.o
-                0x00000000080022fc                getPesRawData
+                0x00000000080023a0       0xd0 ./user/ps2.o
+                0x00000000080023a0                getPesRawData
  .text.getPesAnalog
-                0x00000000080023cc       0xd8 ./user/ps2.o
-                0x00000000080023cc                getPesAnalog
- .text.pes_receive_init
-                0x00000000080024a4       0x2c ./user/ps2.o
-                0x00000000080024a4                pes_receive_init
+                0x0000000008002470       0xd8 ./user/ps2.o
+                0x0000000008002470                getPesAnalog
  .text.HAL_UART_RxCpltCallback
-                0x00000000080024d0       0x16 ./user/ps2.o
-                0x00000000080024d0                HAL_UART_RxCpltCallback
- *fill*         0x00000000080024e6        0x2 
+                0x0000000008002548       0x16 ./user/ps2.o
+                0x0000000008002548                HAL_UART_RxCpltCallback
+ *fill*         0x000000000800255e        0x2 
  .text.pes_uart_event_handle
-                0x00000000080024e8       0xb0 ./user/ps2.o
-                0x00000000080024e8                pes_uart_event_handle
+                0x0000000008002560       0xbc ./user/ps2.o
+                0x0000000008002560                pes_uart_event_handle
  .text.__libc_init_array
-                0x0000000008002598       0x48 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-init.o)
-                0x0000000008002598                __libc_init_array
- .text.memset   0x00000000080025e0       0x10 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-memset.o)
-                0x00000000080025e0                memset
+                0x000000000800261c       0x48 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-init.o)
+                0x000000000800261c                __libc_init_array
+ .text.memset   0x0000000008002664       0x10 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-memset.o)
+                0x0000000008002664                memset
  *(.glue_7)
- .glue_7        0x00000000080025f0        0x0 linker stubs
+ .glue_7        0x0000000008002674        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x00000000080025f0        0x0 linker stubs
+ .glue_7t       0x0000000008002674        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x00000000080025f0        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+ .eh_frame      0x0000000008002674        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
  *(.init)
- .init          0x00000000080025f0        0x4 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crti.o
-                0x00000000080025f0                _init
- .init          0x00000000080025f4        0x8 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtn.o
+ .init          0x0000000008002674        0x4 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crti.o
+                0x0000000008002674                _init
+ .init          0x0000000008002678        0x8 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtn.o
  *(.fini)
- .fini          0x00000000080025fc        0x4 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crti.o
-                0x00000000080025fc                _fini
- .fini          0x0000000008002600        0x8 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtn.o
-                0x0000000008002608                . = ALIGN (0x4)
-                0x0000000008002608                _etext = .
+ .fini          0x0000000008002680        0x4 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crti.o
+                0x0000000008002680                _fini
+ .fini          0x0000000008002684        0x8 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtn.o
+                0x000000000800268c                . = ALIGN (0x4)
+                0x000000000800268c                _etext = .
 
-.vfp11_veneer   0x0000000008002608        0x0
- .vfp11_veneer  0x0000000008002608        0x0 linker stubs
+.vfp11_veneer   0x000000000800268c        0x0
+ .vfp11_veneer  0x000000000800268c        0x0 linker stubs
 
-.v4_bx          0x0000000008002608        0x0
- .v4_bx         0x0000000008002608        0x0 linker stubs
+.v4_bx          0x000000000800268c        0x0
+ .v4_bx         0x000000000800268c        0x0 linker stubs
 
-.iplt           0x0000000008002608        0x0
- .iplt          0x0000000008002608        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+.iplt           0x000000000800268c        0x0
+ .iplt          0x000000000800268c        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
 
-.rodata         0x0000000008002608      0x18c
-                0x0000000008002608                . = ALIGN (0x4)
+.rodata         0x000000000800268c      0x18c
+                0x000000000800268c                . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x0000000008002608       0x10 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
- .rodata        0x0000000008002618      0x164 ./user/main-app.o
+ .rodata        0x000000000800268c       0x10 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
+ .rodata        0x000000000800269c      0x164 ./user/main-app.o
  *(.rodata*)
  .rodata.AHBPrescTable
-                0x000000000800277c       0x10 ./Core/Src/system_stm32f1xx.o
-                0x000000000800277c                AHBPrescTable
+                0x0000000008002800       0x10 ./Core/Src/system_stm32f1xx.o
+                0x0000000008002800                AHBPrescTable
  .rodata.APBPrescTable
-                0x000000000800278c        0x8 ./Core/Src/system_stm32f1xx.o
-                0x000000000800278c                APBPrescTable
-                0x0000000008002794                . = ALIGN (0x4)
+                0x0000000008002810        0x8 ./Core/Src/system_stm32f1xx.o
+                0x0000000008002810                APBPrescTable
+                0x0000000008002818                . = ALIGN (0x4)
 
-.rel.dyn        0x0000000008002794        0x0
- .rel.iplt      0x0000000008002794        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+.rel.dyn        0x0000000008002818        0x0
+ .rel.iplt      0x0000000008002818        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
 
-.ARM.extab      0x0000000008002794        0x0
-                0x0000000008002794                . = ALIGN (0x4)
+.ARM.extab      0x0000000008002818        0x0
+                0x0000000008002818                . = ALIGN (0x4)
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0000000008002794                . = ALIGN (0x4)
+                0x0000000008002818                . = ALIGN (0x4)
 
-.ARM            0x0000000008002794        0x0
-                0x0000000008002794                . = ALIGN (0x4)
-                0x0000000008002794                __exidx_start = .
+.ARM            0x0000000008002818        0x0
+                0x0000000008002818                . = ALIGN (0x4)
+                0x0000000008002818                __exidx_start = .
  *(.ARM.exidx*)
-                0x0000000008002794                __exidx_end = .
-                0x0000000008002794                . = ALIGN (0x4)
+                0x0000000008002818                __exidx_end = .
+                0x0000000008002818                . = ALIGN (0x4)
 
-.preinit_array  0x0000000008002794        0x0
-                0x0000000008002794                . = ALIGN (0x4)
-                0x0000000008002794                PROVIDE (__preinit_array_start = .)
+.preinit_array  0x0000000008002818        0x0
+                0x0000000008002818                . = ALIGN (0x4)
+                0x0000000008002818                PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x0000000008002794                PROVIDE (__preinit_array_end = .)
-                0x0000000008002794                . = ALIGN (0x4)
+                0x0000000008002818                PROVIDE (__preinit_array_end = .)
+                0x0000000008002818                . = ALIGN (0x4)
 
-.init_array     0x0000000008002794        0x4
-                0x0000000008002794                . = ALIGN (0x4)
-                0x0000000008002794                PROVIDE (__init_array_start = .)
+.init_array     0x0000000008002818        0x4
+                0x0000000008002818                . = ALIGN (0x4)
+                0x0000000008002818                PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array*)
- .init_array    0x0000000008002794        0x4 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
-                0x0000000008002798                PROVIDE (__init_array_end = .)
-                0x0000000008002798                . = ALIGN (0x4)
+ .init_array    0x0000000008002818        0x4 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+                0x000000000800281c                PROVIDE (__init_array_end = .)
+                0x000000000800281c                . = ALIGN (0x4)
 
-.fini_array     0x0000000008002798        0x4
-                0x0000000008002798                . = ALIGN (0x4)
+.fini_array     0x000000000800281c        0x4
+                0x000000000800281c                . = ALIGN (0x4)
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x0000000008002798        0x4 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+ .fini_array    0x000000000800281c        0x4 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
                 [!provide]                        PROVIDE (__fini_array_end = .)
-                0x000000000800279c                . = ALIGN (0x4)
-                0x000000000800279c                _sidata = LOADADDR (.data)
+                0x0000000008002820                . = ALIGN (0x4)
+                0x0000000008002820                _sidata = LOADADDR (.data)
 
-.data           0x0000000020000000        0xc load address 0x000000000800279c
+.data           0x0000000020000000       0x38 load address 0x0000000008002820
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
@@ -985,62 +992,82 @@ LOAD c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
  .data.uwTickFreq
                 0x0000000020000008        0x1 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
                 0x0000000020000008                uwTickFreq
- *fill*         0x0000000020000009        0x1 
+ *fill*         0x0000000020000009        0x3 
+ .data.PS2_POLL_ARR
+                0x000000002000000c        0x5 ./user/ps2.o
+                0x000000002000000c                PS2_POLL_ARR
+ *fill*         0x0000000020000011        0x3 
+ .data.PS2_CONFIG_MODE
+                0x0000000020000014        0x5 ./user/ps2.o
+                0x0000000020000014                PS2_CONFIG_MODE
+ *fill*         0x0000000020000019        0x3 
+ .data.PS2_ANALOG_MODE
+                0x000000002000001c        0x9 ./user/ps2.o
+                0x000000002000001c                PS2_ANALOG_MODE
+ *fill*         0x0000000020000025        0x3 
+ .data.PS2_EXIT_CONFIG
+                0x0000000020000028        0x9 ./user/ps2.o
+                0x0000000020000028                PS2_EXIT_CONFIG
+ *fill*         0x0000000020000031        0x1 
  .data.pesDigitalRawData
-                0x000000002000000a        0x2 ./user/ps2.o
-                0x000000002000000a                pesDigitalRawData
+                0x0000000020000032        0x2 ./user/ps2.o
+                0x0000000020000032                pesDigitalRawData
+ .data.pesAnalogRawData
+                0x0000000020000034        0x1 ./user/ps2.o
+                0x0000000020000034                pesAnalogRawData
  *(.RamFunc)
  *(.RamFunc*)
-                0x000000002000000c                . = ALIGN (0x4)
-                0x000000002000000c                _edata = .
+                0x0000000020000038                . = ALIGN (0x4)
+ *fill*         0x0000000020000035        0x3 
+                0x0000000020000038                _edata = .
 
-.igot.plt       0x000000002000000c        0x0 load address 0x00000000080027a8
- .igot.plt      0x000000002000000c        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
-                0x000000002000000c                . = ALIGN (0x4)
+.igot.plt       0x0000000020000038        0x0 load address 0x0000000008002858
+ .igot.plt      0x0000000020000038        0x0 c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+                0x0000000020000038                . = ALIGN (0x4)
 
-.bss            0x000000002000000c       0xc4 load address 0x00000000080027a8
-                0x000000002000000c                _sbss = .
-                0x000000002000000c                __bss_start__ = _sbss
+.bss            0x0000000020000038       0xc4 load address 0x0000000008002858
+                0x0000000020000038                _sbss = .
+                0x0000000020000038                __bss_start__ = _sbss
  *(.bss)
- .bss           0x000000002000000c       0x1c c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+ .bss           0x0000000020000038       0x1c c:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.100.202210260954/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
  *(.bss*)
- .bss.hiwdg     0x0000000020000028        0xc ./Core/Src/main.o
-                0x0000000020000028                hiwdg
- .bss.huart2    0x0000000020000034       0x44 ./Core/Src/main.o
-                0x0000000020000034                huart2
- .bss.huart3    0x0000000020000078       0x44 ./Core/Src/main.o
-                0x0000000020000078                huart3
- .bss.uwTick    0x00000000200000bc        0x4 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
-                0x00000000200000bc                uwTick
- .bss.ticks.0   0x00000000200000c0        0x4 ./user/main-app.o
+ .bss.hiwdg     0x0000000020000054        0xc ./Core/Src/main.o
+                0x0000000020000054                hiwdg
+ .bss.huart2    0x0000000020000060       0x44 ./Core/Src/main.o
+                0x0000000020000060                huart2
+ .bss.huart3    0x00000000200000a4       0x44 ./Core/Src/main.o
+                0x00000000200000a4                huart3
+ .bss.uwTick    0x00000000200000e8        0x4 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
+                0x00000000200000e8                uwTick
+ .bss.ticks.0   0x00000000200000ec        0x4 ./user/main-app.o
  .bss.UartReceive
-                0x00000000200000c4        0x4 ./user/ps2.o
-                0x00000000200000c4                UartReceive
+                0x00000000200000f0        0x4 ./user/ps2.o
+                0x00000000200000f0                UartReceive
  .bss.u8_pesData
-                0x00000000200000c8        0x1 ./user/ps2.o
-                0x00000000200000c8                u8_pesData
+                0x00000000200000f4        0x1 ./user/ps2.o
+                0x00000000200000f4                u8_pesData
  .bss.byHeadIsTrue.2
-                0x00000000200000c9        0x1 ./user/ps2.o
- .bss.i_pes.1   0x00000000200000ca        0x1 ./user/ps2.o
- *fill*         0x00000000200000cb        0x1 
+                0x00000000200000f5        0x1 ./user/ps2.o
+ .bss.i_pes.1   0x00000000200000f6        0x1 ./user/ps2.o
+ *fill*         0x00000000200000f7        0x1 
  .bss.pesBuff.0
-                0x00000000200000cc        0x3 ./user/ps2.o
+                0x00000000200000f8        0x4 ./user/ps2.o
  *(COMMON)
-                0x00000000200000d0                . = ALIGN (0x4)
- *fill*         0x00000000200000cf        0x1 
-                0x00000000200000d0                _ebss = .
-                0x00000000200000d0                __bss_end__ = _ebss
+                0x00000000200000fc                . = ALIGN (0x4)
+                0x00000000200000fc                _ebss = .
+                0x00000000200000fc                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x00000000200000d0      0x600 load address 0x00000000080027a8
-                0x00000000200000d0                . = ALIGN (0x8)
+                0x00000000200000fc      0x604 load address 0x0000000008002858
+                0x0000000020000100                . = ALIGN (0x8)
+ *fill*         0x00000000200000fc        0x4 
                 [!provide]                        PROVIDE (end = .)
-                0x00000000200000d0                PROVIDE (_end = .)
-                0x00000000200002d0                . = (. + _Min_Heap_Size)
- *fill*         0x00000000200000d0      0x200 
-                0x00000000200006d0                . = (. + _Min_Stack_Size)
- *fill*         0x00000000200002d0      0x400 
-                0x00000000200006d0                . = ALIGN (0x8)
+                0x0000000020000100                PROVIDE (_end = .)
+                0x0000000020000300                . = (. + _Min_Heap_Size)
+ *fill*         0x0000000020000100      0x200 
+                0x0000000020000700                . = (. + _Min_Stack_Size)
+ *fill*         0x0000000020000300      0x400 
+                0x0000000020000700                . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)

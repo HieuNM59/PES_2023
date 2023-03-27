@@ -21,7 +21,14 @@
 
 /* Public variables -------------------------------------------------*/
 
+uint8_t PS2_POLL_ARR[]	= {0x1, 0x42, 0x00, 0x00, 0x0};
+uint8_t PS2_CONFIG_MODE[5] = {0x01, 0x43, 0x00, 0x01, 0x00};
+uint8_t PS2_ANALOG_MODE[9] = {0x01, 0x44, 0x00, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00};
+uint8_t PS2_EXIT_CONFIG[9] = {0x01, 0x43, 0x00, 0x00, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A};
+
+
 pes_button_t pesButton;
+pes_joyStick_t pesJoyStick;
 
 unsigned char access(unsigned int tbyte){
 	unsigned char rbyte = 0, tempp = 0;
@@ -42,6 +49,27 @@ unsigned char access(unsigned int tbyte){
 	return rbyte;
 }
 
+void ps2_SendConfig(uint8_t* cmd, uint8_t length)
+{
+	int i;
+	HAL_GPIO_WritePin(PES_ATT_GPIO_Port,PES_ATT_Pin,GPIO_PIN_RESET);
+	DWT_Delay_us(16);
+	for(i = 0 ; i < length ; i++){
+		access(cmd[i]);
+	}
+	DWT_Delay_us(16);
+	HAL_GPIO_WritePin(PES_ATT_GPIO_Port,PES_ATT_Pin,GPIO_PIN_SET);
+}
+
+void ps2_EnableAnalogMode(void){
+	ps2_SendConfig(PS2_POLL_ARR, sizeof(PS2_POLL_ARR));
+	ps2_SendConfig(PS2_POLL_ARR, sizeof(PS2_POLL_ARR));
+	ps2_SendConfig(PS2_POLL_ARR, sizeof(PS2_POLL_ARR));
+
+	ps2_SendConfig(PS2_CONFIG_MODE, sizeof(PS2_CONFIG_MODE));
+	ps2_SendConfig(PS2_ANALOG_MODE, sizeof(PS2_ANALOG_MODE));
+	ps2_SendConfig(PS2_EXIT_CONFIG, sizeof(PS2_EXIT_CONFIG));
+}
 /**
  * Get digital datain transmit module
  */
@@ -74,6 +102,7 @@ void getPesRawData(uint8_t *pData){
 uint8_t getPesAnalog(uint8_t *pesRawData){
 	uint8_t analog;
 
+	/* Analog Left Y Axis */
     analog = 0xff;
     if(pesRawData[5] > 230)
 		analog = analog & 0xfe;
@@ -82,6 +111,7 @@ uint8_t getPesAnalog(uint8_t *pesRawData){
 	else
 		analog = analog | 0x03;
 
+	/* Analog Left X Axis */
 	if(pesRawData[4] > 230)
 		analog = analog & 0xfb;
 	else if(pesRawData[4] < 20)
@@ -89,6 +119,7 @@ uint8_t getPesAnalog(uint8_t *pesRawData){
 	else
         analog = analog | 0x0c;
 
+	/* Analog Right Y Axis */
 	if(pesRawData[3] > 230)
 		analog = analog & 0xef;
 	else if(pesRawData[3] < 20)
@@ -96,6 +127,7 @@ uint8_t getPesAnalog(uint8_t *pesRawData){
 	else
 		analog = analog | 0x30;
 
+	/* Analog Right X Axis */
 	if(pesRawData[2] > 230)
 		analog = analog & 0xbf;
 	else if(pesRawData[2] < 20)
@@ -136,6 +168,7 @@ void decodePES_1(uint8_t *PES){
 UART_HandleTypeDef* UartReceive;
 uint8_t u8_pesData;
 uint16_t pesDigitalRawData = 0xFFFF;
+uint8_t pesAnalogRawData = 0xFF;
 
 /* Coppy and paste to main init ------------------------------------------------*/
 
@@ -171,6 +204,17 @@ void decodePES(void){
 	pesButton.Tron 		= (pesData[1] & 0x20) >> 5;
 	pesButton.X 		= (pesData[1] & 0x40) >> 6;
 	pesButton.Vuong 	= (pesData[1] & 0x80) >> 7;
+
+	pesJoyStick.right_b.Up = (pesAnalogRawData & 0x80) >> 7;
+	pesJoyStick.right_b.Down = (pesAnalogRawData & 0x40) >> 6;
+	pesJoyStick.right_b.Left = (pesAnalogRawData & 0x20) >> 5;
+	pesJoyStick.right_b.Right = (pesAnalogRawData & 0x10) >> 4;
+
+	pesJoyStick.left_b.Up = (pesAnalogRawData & 0x08) >> 3;
+	pesJoyStick.left_b.Down = (pesAnalogRawData & 0x04) >> 2;
+	pesJoyStick.left_b.Left = (pesAnalogRawData & 0x02) >> 1;
+	pesJoyStick.left_b.Right = (pesAnalogRawData & 0x01) ;
+
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
@@ -182,7 +226,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 void pes_uart_event_handle(UART_HandleTypeDef *huart){
 	static uint8_t byHeadIsTrue = 0;
 	static uint8_t i_pes = 0;
-	static uint8_t pesBuff[3];
+	static uint8_t pesBuff[4];
 
 	if(huart->Instance == UartReceive->Instance){
 		if(u8_pesData == 'F' ){
@@ -192,8 +236,9 @@ void pes_uart_event_handle(UART_HandleTypeDef *huart){
 		else{
 			if(byHeadIsTrue){
 				pesBuff[i_pes++] = u8_pesData;
-				if(i_pes > 2){
+				if(i_pes > 3){
 					pesDigitalRawData = pesBuff[1] << 8 | pesBuff[0];
+					pesAnalogRawData = pesBuff[2];
 					i_pes = 0;
 					byHeadIsTrue = 0;
 				}
