@@ -236,7 +236,7 @@ void pes_uart_event_handle(UART_HandleTypeDef *huart){
 		else{
 			if(byHeadIsTrue){
 				pesBuff[i_pes++] = u8_pesData;
-				if(i_pes > 3){
+				if(i_pes >= 3){
 					pesDigitalRawData = pesBuff[1] << 8 | pesBuff[0];
 					pesAnalogRawData = pesBuff[2];
 					i_pes = 0;

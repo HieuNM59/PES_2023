@@ -4320,7 +4320,7 @@ Infinite_Loop:
  80025a8:	5499      	strb	r1, [r3, r2]
  80025aa:	4b18      	ldr	r3, [pc, #96]	; (800260c <pes_uart_event_handle+0xac>)
  80025ac:	781b      	ldrb	r3, [r3, #0]
- 80025ae:	2b03      	cmp	r3, #3
+ 80025ae:	2b02      	cmp	r3, #2
  80025b0:	d91a      	bls.n	80025e8 <pes_uart_event_handle+0x88>
  80025b2:	4b17      	ldr	r3, [pc, #92]	; (8002610 <pes_uart_event_handle+0xb0>)
  80025b4:	785b      	ldrb	r3, [r3, #1]
