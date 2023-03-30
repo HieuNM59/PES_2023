@@ -9,10 +9,13 @@
 #include "dwt_stm32_delay.h"
 #include "main-app.h"
 
+#define LED_PC13_Pin GPIO_PIN_13
+#define LED_PC13_GPIO_Port GPIOC
+
 #define SIZE_OF_PAYLOAD 			4
 #define TIME_POLL_PES				20	//ms
 
-//#define USE_DEBUG_IN_ONE_BOARD
+#define USE_DEBUG_IN_ONE_BOARD
 
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
@@ -20,6 +23,8 @@ extern UART_HandleTypeDef huart3;
 static void Debug_SendStr(char *pString);
 
 static uint32_t getTimeElapse(uint32_t timeStart);
+
+void Debug_ButtonPrintfState(void);
 
 static uint32_t getTimeElapse(uint32_t timeStart){
 	uint32_t curTime = HAL_GetTick();
@@ -45,7 +50,9 @@ static void Debug_SendStr(char *pString) {
 void main_Init(void){
 	DWT_Delay_Init();
 	ps2_EnableAnalogMode();
+
 //	pes_receive_init(&huart3);
+	pesDebugInit();
 	Debug_SendStr("Main Init! \n");
 }
 
@@ -75,64 +82,80 @@ void main_process(void){
 		payload[3] = analogValue;	/* Analog data */
 
 		HAL_UART_Transmit(&huart3, payload, SIZE_OF_PAYLOAD, 200);
+
+		/* Use to debug in only one board.
+		 * connect Uart 3 TX -> Uart3 RX (PB10 -> PB11)
+		 * Debug printing in Uart 2 TX (PA2)
+		 */
+	#ifdef USE_DEBUG_IN_ONE_BOARD
+		Debug_ButtonPrintfState();
+	#endif
+
 		ticks = HAL_GetTick();
 	}
-
-	/* Use to debug in only one board.
-	 * connect Uart 3 TX -> Uart3 RX (PB10 -> PB11)
-	 * Debug printing in Uart 2 TX (PA2)
-	 */
-#ifdef USE_DEBUG_IN_ONE_BOARD
-	decodePES();
-	Debug_ButtonPrintfState();
-#endif
-
 }
 
 /*
  * used for debug button in uart2
  */
 void Debug_ButtonPrintfState(void){
-	if(!pesButton.Up){
-		Debug_SendStr("Button Up is press!\n");
+	if(!debug_pesbutton->Up){
+		Debug_SendStr("Up is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.Down){
-		Debug_SendStr("Button Down is press!\n");
+	else if(!debug_pesbutton->Down){
+		Debug_SendStr("Down is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.Right){
-		Debug_SendStr("Button Right is press!\n");
+	else if(!debug_pesbutton->Right){
+		Debug_SendStr("Right is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.Left){
-		Debug_SendStr("Button Left is press!\n");
+	else if(!debug_pesbutton->Left){
+		Debug_SendStr("Left is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.L1){
-		Debug_SendStr("Button L1 is press!\n");
+	else if(!debug_pesbutton->L1){
+		Debug_SendStr("L1 is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.L2){
-		Debug_SendStr("Button L2 is press!\n");
+	else if(!debug_pesbutton->L2){
+		Debug_SendStr("L2 is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.R1){
-		Debug_SendStr("Button R1 is press!\n");
+	else if(!debug_pesbutton->R1){
+		Debug_SendStr("R1 is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.R2){
-		Debug_SendStr("Button R2 is press!\n");
+	else if(!debug_pesbutton->R2){
+		Debug_SendStr("R2 is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.Select){
-		Debug_SendStr("Button Select is press!\n");
+	else if(!debug_pesbutton->Select){
+		Debug_SendStr("Select is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.Start){
-		Debug_SendStr("Button Start is press!\n");
+	else if(!debug_pesbutton->Start){
+		Debug_SendStr("Start is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.Tron){
-		Debug_SendStr("Button Tron is press!\n");
+	else if(!debug_pesbutton->Tron){
+		Debug_SendStr("Tron is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.Vuong){
-		Debug_SendStr("Button Vuong is press!\n");
+	else if(!debug_pesbutton->Vuong){
+		Debug_SendStr("Vuong is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.Tamgiac){
-		Debug_SendStr("Button Tamgiac is press!\n");
+	else if(!debug_pesbutton->Tamgiac){
+		Debug_SendStr("Tamgiac is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 	}
-	else if(!pesButton.X){
-		Debug_SendStr("Button X is press!\n");
+	else if(!debug_pesbutton->X){
+		Debug_SendStr("X is press!\n");
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
+	}
+	else{
+		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 0);
 	}
 }
