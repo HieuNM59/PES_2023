@@ -1,0 +1,8 @@
+main-app.c:54:17:getTimeElapse	2
+main-app.c:66:13:Debug_SendStr	2
+main-app.c:73:13:monitorInit	1
+main-app.c:84:13:pollFifo	18
+main-app.c:145:6:main_Init	1
+main-app.c:161:6:main_process	4
+main-app.c:210:13:Debug_ButtonPrintfState	29
+main-app.c:368:6:HAL_UART_RxCpltCallback	2

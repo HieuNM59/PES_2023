@@ -6,6 +6,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../user/dwt_stm32_delay.c \
+../user/fifo.c \
 ../user/fonts.c \
 ../user/main-app.c \
 ../user/ps2.c \
@@ -13,6 +14,7 @@ C_SRCS += \
 
 OBJS += \
 ./user/dwt_stm32_delay.o \
+./user/fifo.o \
 ./user/fonts.o \
 ./user/main-app.o \
 ./user/ps2.o \
@@ -20,6 +22,7 @@ OBJS += \
 
 C_DEPS += \
 ./user/dwt_stm32_delay.d \
+./user/fifo.d \
 ./user/fonts.d \
 ./user/main-app.d \
 ./user/ps2.d \
@@ -33,7 +36,7 @@ user/%.o user/%.su: ../user/%.c user/subdir.mk
 clean: clean-user
 
 clean-user:
-	-$(RM) ./user/dwt_stm32_delay.d ./user/dwt_stm32_delay.o ./user/dwt_stm32_delay.su ./user/fonts.d ./user/fonts.o ./user/fonts.su ./user/main-app.d ./user/main-app.o ./user/main-app.su ./user/ps2.d ./user/ps2.o ./user/ps2.su ./user/ssd1306.d ./user/ssd1306.o ./user/ssd1306.su
+	-$(RM) ./user/dwt_stm32_delay.d ./user/dwt_stm32_delay.o ./user/dwt_stm32_delay.su ./user/fifo.d ./user/fifo.o ./user/fifo.su ./user/fonts.d ./user/fonts.o ./user/fonts.su ./user/main-app.d ./user/main-app.o ./user/main-app.su ./user/ps2.d ./user/ps2.o ./user/ps2.su ./user/ssd1306.d ./user/ssd1306.o ./user/ssd1306.su
 
 .PHONY: clean-user
 

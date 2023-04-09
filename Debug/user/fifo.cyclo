@@ -1,0 +1,6 @@
+fifo.c:13:6:FifoInit	1
+fifo.c:21:9:FifoIsFull	2
+fifo.c:28:9:FifoIsEmpty	1
+fifo.c:32:9:FifoPushData	3
+fifo.c:45:9:FifoPopData	3
+fifo.c:58:6:FifoFlush	1

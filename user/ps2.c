@@ -30,9 +30,6 @@ uint8_t PS2_EXIT_CONFIG[9] = {0x01, 0x43, 0x00, 0x00, 0x5A, 0x5A, 0x5A, 0x5A, 0x
 pes_button_p pesButton;
 pes_joyStick_p pesJoyStick;
 
-pes_button_p debug_pesbutton;
-pes_joyStick_p debug_pesJoyStick;
-
 unsigned char access(unsigned int tbyte){
 	unsigned char rbyte = 0, tempp = 0;
 	unsigned int j;
@@ -163,17 +160,10 @@ void pes_receive_init(UART_HandleTypeDef* pUart){
 	pesJoyStick = (pes_joyStick_p)&pesAnalogRawData;
 }
 /*
- * Callback trên khối nhận
- */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	pes_uart_event_handle(huart);
-}
-/*
  * This Functionsử dụng để nhận pes Frame, sử dụng trên khối nhận
  * Coppy and paste to HAL_UART_RxCpltCallback ------------------------------------------------
  *
  */
-
 void pes_uart_event_handle(UART_HandleTypeDef *huart){
 	static uint8_t byHeadIsTrue = 0;
 	static uint8_t i_pes = 0;
@@ -200,10 +190,4 @@ void pes_uart_event_handle(UART_HandleTypeDef *huart){
 		}
 		HAL_UART_Receive_IT(UartReceive, &u8_pesData, 1);
 	}
-}
-
-/* Function use debug in Transmit */
-void pesDebugInit(void){
-	debug_pesbutton = (pes_button_p)&pesDigitalRawData;
-	debug_pesJoyStick = (pes_joyStick_p)&pesAnalogRawData;
 }

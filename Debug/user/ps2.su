@@ -1,10 +1,8 @@
 ../user/dwt_stm32_delay.h:25:22:DWT_Delay_us	24	static
-../user/ps2.c:36:15:access	32	static
-../user/ps2.c:55:6:ps2_SendConfig	24	static
-../user/ps2.c:69:6:ps2_EnableAnalogMode	8	static
-../user/ps2.c:81:6:getPesRawData	32	static
-../user/ps2.c:107:9:getPesAnalog	24	static
-../user/ps2.c:158:6:pes_receive_init	16	static
-../user/ps2.c:168:6:HAL_UART_RxCpltCallback	16	static
-../user/ps2.c:177:6:pes_uart_event_handle	16	static
-../user/ps2.c:206:6:pesDebugInit	4	static
+../user/ps2.c:33:15:access	32	static
+../user/ps2.c:52:6:ps2_SendConfig	24	static
+../user/ps2.c:66:6:ps2_EnableAnalogMode	8	static
+../user/ps2.c:78:6:getPesRawData	32	static
+../user/ps2.c:104:9:getPesAnalog	24	static
+../user/ps2.c:155:6:pes_receive_init	16	static
+../user/ps2.c:167:6:pes_uart_event_handle	16	static

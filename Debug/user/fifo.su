@@ -1,0 +1,6 @@
+../user/fifo.c:13:6:FifoInit	24	static
+../user/fifo.c:21:9:FifoIsFull	16	static
+../user/fifo.c:28:9:FifoIsEmpty	16	static
+../user/fifo.c:32:9:FifoPushData	24	static
+../user/fifo.c:45:9:FifoPopData	24	static
+../user/fifo.c:58:6:FifoFlush	16	static

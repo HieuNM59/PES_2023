@@ -1,0 +1,17 @@
+ssd1306.c:10:13:ssd1306_WriteCommand	1
+ssd1306.c:15:9:ssd1306_Init	1
+ssd1306.c:60:6:ssd1306_Fill	3
+ssd1306.c:70:6:ssd1306_UpdateScreen	2
+ssd1306.c:82:6:ssd1306_DrawPixel	5
+ssd1306.c:104:6:ssd1306_WriteChar	6
+ssd1306.c:135:6:ssd1306_WriteString	3
+ssd1306.c:150:6:ssd1306_SetCursor	1
+ssd1306.c:156:6:ssd1306_DrawLine	22
+ssd1306.c:236:6:ssd1306_DrawRectangle	5
+ssd1306.c:257:6:ssd1306_DrawFilledRectangle	6
+ssd1306.c:278:6:ssd1306_DrawTriangle	1
+ssd1306.c:286:6:ssd1306_DrawFilledTriangle	6
+ssd1306.c:343:6:ssd1306_DrawCircle	3
+ssd1306.c:378:6:ssd1306_DrawFilledCircle	3
+ssd1306.c:410:6:ssd1306_ON	1
+ssd1306.c:417:6:ssd1306_OFF	1
