@@ -7,6 +7,8 @@
 #include "stm32f1xx_hal.h"
 #include "ps2.h"
 #include "dwt_stm32_delay.h"
+#include "ssd1306.h"
+#include "fonts.h"
 #include "main-app.h"
 
 #define LED_PC13_Pin GPIO_PIN_13
@@ -49,6 +51,7 @@ static void Debug_SendStr(char *pString) {
  */
 void main_Init(void){
 	DWT_Delay_Init();
+	ssd1306_Init();
 	ps2_EnableAnalogMode();
 
 //	pes_receive_init(&huart3);
