@@ -47,6 +47,22 @@ typedef struct _PES_JOY_STICk_	// Thay đổi thứ tự sẽ gây sai nút
 	uint8_t right_Left:1;
 }pes_joyStick_t, *pes_joyStick_p;
 
+typedef struct _PES_EXTERNAL_BUTTON{
+	uint8_t btn1:1;
+	uint8_t btn2:1;
+	uint8_t btn3:1;
+	uint8_t btn4:1;
+	uint8_t btn5:1;
+	uint8_t btn6:1;
+	uint8_t reverse:2;
+}external_button_state_t, *external_button_state_p;
+
+typedef enum {
+    FONT_SIZE_SMALL = 0,
+    FONT_SIZE_MEDIUM,
+    FONT_SIZE_BIG,
+}pes_font_e;
+
 extern pes_button_p pesButton;
 extern pes_joyStick_p pesJoyStick;
 

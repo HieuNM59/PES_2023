@@ -1,8 +1,9 @@
-../user/main-app.c:54:17:getTimeElapse	24	static
-../user/main-app.c:66:13:Debug_SendStr	16	static
-../user/main-app.c:73:13:monitorInit	8	static
-../user/main-app.c:84:13:pollFifo	16	static
-../user/main-app.c:145:6:main_Init	8	static
-../user/main-app.c:161:6:main_process	24	static
-../user/main-app.c:210:13:Debug_ButtonPrintfState	8	static
-../user/main-app.c:368:6:HAL_UART_RxCpltCallback	16	static
+../user/main-app.c:70:17:getTimeElapse	24	static
+../user/main-app.c:82:13:Debug_SendStr	16	static
+../user/main-app.c:89:13:monitorInit	8	static
+../user/main-app.c:100:13:pollFifo	16	static
+../user/main-app.c:166:6:buttonScan	8	static
+../user/main-app.c:265:6:main_Init	8	static
+../user/main-app.c:282:6:main_process	24	static
+../user/main-app.c:335:13:Debug_ButtonPrintfState	8	static
+../user/main-app.c:479:6:HAL_UART_RxCpltCallback	16	static

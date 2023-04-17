@@ -7,6 +7,9 @@
 
 #include "dwt_stm32_delay.h"
 #include "ps2.h"
+#include "stdarg.h"
+#include "stdio.h"
+#include "string.h"
 
 #define PES_CLK_Pin GPIO_PIN_12
 #define PES_CLK_GPIO_Port GPIOB
@@ -20,7 +23,7 @@
 /* Structure ---------------------------------------------------------*/
 
 /* Public variables -------------------------------------------------*/
-
+UART_HandleTypeDef* UartTransmit;
 uint8_t PS2_POLL_ARR[]	= {0x1, 0x42, 0x00, 0x00, 0x0};
 uint8_t PS2_CONFIG_MODE[5] = {0x01, 0x43, 0x00, 0x01, 0x00};
 uint8_t PS2_ANALOG_MODE[9] = {0x01, 0x44, 0x00, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00};
@@ -139,13 +142,38 @@ uint8_t getPesAnalog(uint8_t *pesRawData){
 	return analog;
 }
 
+void pes_monitor_init(UART_HandleTypeDef* pUart){
+	UartTransmit = pUart;
+}
+void pesPrintf(pes_font_e font, uint8_t x, uint8_t y, const char* pString, ...){
+    uint8_t frame[45] = {0, };
+    uint8_t StrBuff[30] = {0, };
+
+    sprintf(&frame[0], "FEE+%.2d%.2d%d%.2d",x , y, font, strlen(pString));
+
+    va_list ap;
+    va_start(ap, pString);
+    vsnprintf(&StrBuff[0], sizeof(StrBuff), pString, ap);
+    va_end(ap);
+
+    memcpy(&frame[11], StrBuff, strlen(pString));
+    HAL_UART_Transmit(UartTransmit, frame, 11 + strlen(pString), 1000);
+}
+
+void pesMonitorClear(void){
+	uint8_t frame[3] = {'D', 'E', 'L'};
+	HAL_UART_Transmit(UartTransmit, frame, sizeof(frame), 200);
+}
+
 /*This code used for receive Pes Data  --------------------------------------------------*/
 
 /* Coppy and paste to Public variable ------------------------------------------------*/
 UART_HandleTypeDef* UartReceive;
+
 uint8_t u8_pesData;
 uint16_t pesDigitalRawData = 0xFFFF;
 uint8_t pesAnalogRawData = 0xFF;
+uint8_t pesExternalButtonData = 0xFF;
 
 /* khởi tạo ngắt nhận trên khối nhận
  * Và trỏ 2struct tới địa chỉ của biến lưu giá trị pes nhận được trong ngắt uart
@@ -179,7 +207,8 @@ void pes_uart_event_handle(UART_HandleTypeDef *huart){
 				pesBuff[i_pes++] = u8_pesData;
 				if(i_pes >= 3){
 					pesDigitalRawData = pesBuff[1] << 8 | pesBuff[0];
-					pesAnalogRawData = pesBuff[2];
+					pesExternalButtonData = pesBuff[2];
+					pesAnalogRawData = pesBuff[3];
 					i_pes = 0;
 					byHeadIsTrue = 0;
 				}

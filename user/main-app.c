@@ -16,19 +16,35 @@
 #define LED_PC13_Pin GPIO_PIN_13
 #define LED_PC13_GPIO_Port GPIOC
 
+#define INPUT_6_Pin GPIO_PIN_4
+#define INPUT_6_GPIO_Port GPIOA
+#define INPUT_5_Pin GPIO_PIN_5
+#define INPUT_5_GPIO_Port GPIOA
+#define INPUT_4_Pin GPIO_PIN_6
+#define INPUT_4_GPIO_Port GPIOA
+#define INPUT_3_Pin GPIO_PIN_7
+#define INPUT_3_GPIO_Port GPIOA
+#define INPUT_2_Pin GPIO_PIN_0
+#define INPUT_2_GPIO_Port GPIOB
+#define INPUT_1_Pin GPIO_PIN_1
+#define INPUT_1_GPIO_Port GPIOB
+
 #define MAX_BUFF					0xFF
-#define SIZE_OF_PAYLOAD 			4
+#define SIZE_OF_PAYLOAD 			5
 #define TIME_POLL_PES				60	//ms
 #define TIME_POLL_MONITOR			100	//ms
 
+#define TIME_BOUND					5
+#define TIME_SCAN_BUTTON			10 //ms
 
 #define USE_DEBUG_IN_ONE_BOARD
 
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 
-
 static fifo_t pesFifo;
+
+uint8_t exButtonVal = 0xFF;
 
 uint8_t pPesBuff[MAX_BUFF];
 
@@ -139,6 +155,110 @@ static void pollFifo(void){
 		ssd1306_UpdateScreen();
 	}
 }
+
+uint8_t checkBtn1 = 0;
+uint8_t checkBtn2 = 0;
+uint8_t checkBtn3 = 0;
+uint8_t checkBtn4 = 0;
+uint8_t checkBtn5 = 0;
+uint8_t checkBtn6 = 0;
+
+void buttonScan(void){
+	static uint32_t tickScan = 0;
+
+	if(HAL_GetTick() - tickScan > TIME_SCAN_BUTTON){
+		if(!HAL_GPIO_ReadPin(INPUT_1_GPIO_Port, INPUT_1_Pin)){
+				checkBtn1++;
+		}
+		else{
+			checkBtn1 = 0;
+		}
+
+		if(!HAL_GPIO_ReadPin(INPUT_2_GPIO_Port, INPUT_2_Pin)){
+				checkBtn2++;
+		}
+		else{
+			checkBtn2 = 0;
+		}
+
+		if(!HAL_GPIO_ReadPin(INPUT_3_GPIO_Port, INPUT_3_Pin)){
+				checkBtn3++;
+		}
+		else{
+			checkBtn3 = 0;
+		}
+
+		if(!HAL_GPIO_ReadPin(INPUT_4_GPIO_Port, INPUT_4_Pin)){
+				checkBtn4++;
+		}
+		else{
+			checkBtn4 = 0;
+		}
+
+		if(!HAL_GPIO_ReadPin(INPUT_5_GPIO_Port, INPUT_5_Pin)){
+				checkBtn5++;
+		}
+		else{
+			checkBtn5 = 0;
+		}
+
+		if(!HAL_GPIO_ReadPin(INPUT_6_GPIO_Port, INPUT_6_Pin)){
+				checkBtn6++;
+		}
+		else{
+			checkBtn6 = 0;
+		}
+
+		// Set logic Button1
+		if(checkBtn1 > TIME_BOUND){
+			exButtonVal &= ~(1 << 0);
+		}
+		else{
+			exButtonVal |= (1 << 0);
+		}
+
+		// Set logic Button2
+		if(checkBtn2 > TIME_BOUND){
+			exButtonVal &= ~(1 << 1);
+		}
+		else{
+			exButtonVal |= (1 << 1);
+		}
+
+		// Set logic Button3
+		if(checkBtn3 > TIME_BOUND){
+			exButtonVal &= ~(1 << 2);
+		}
+		else{
+			exButtonVal |= (1 << 2);
+		}
+
+		// Set logic Button4
+		if(checkBtn4 > TIME_BOUND){
+			exButtonVal &= ~(1 << 3);
+		}
+		else{
+			exButtonVal |= (1 << 3);
+		}
+
+		// Set logic Button5
+		if(checkBtn5 > TIME_BOUND){
+			exButtonVal &= ~(1 << 4);
+		}
+		else{
+			exButtonVal |= (1 << 4);
+		}
+
+		// Set logic Button6
+		if(checkBtn6 > TIME_BOUND){
+			exButtonVal &= ~(1 << 5);
+		}
+		else{
+			exButtonVal |= (1 << 5);
+		}
+	}
+}
+
 /*
  * Main Init
  */
@@ -148,6 +268,7 @@ void main_Init(void){
 	ssd1306_Init();
 
 	monitorInit();
+
 	/* Enable mode analog*/
 	ps2_EnableAnalogMode();
 
@@ -171,6 +292,9 @@ void main_process(void){
 	 * Nên cần thay đổi thời gian TIME_POLL_PES(Nên để 20 -> 50ms),
 	 * Tránh việc bắn Uart liên tục gây quá tải HC-05 -> HC-05 bị reboot -> mất kết nối PS2
 	 */
+
+	buttonScan();
+
 	if(getTimeElapse(ticksPollPes) >= TIME_POLL_PES){
 		getPesRawData(PES);
 
@@ -179,7 +303,8 @@ void main_process(void){
 		payload[0] = 'F';			/* Header bytee */
 		payload[1] = PES[0];		/* Low byte digital data */
 		payload[2] = PES[1];		/* High byte digital data */
-		payload[3] = analogValue;	/* Analog data */
+		payload[3] = exButtonVal;
+		payload[4] = analogValue;	/* Analog data */
 
 		HAL_UART_Transmit(&huart3, payload, SIZE_OF_PAYLOAD, 200);
 
@@ -211,7 +336,6 @@ static void Debug_ButtonPrintfState(void){
 
 	static uint8_t lastState = 0;
 	if(!debug_pesbutton->Up){
-//		Debug_SendStr("Up is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState!=1 ){
 			ssd1306_SetCursor(75, 53);
@@ -221,7 +345,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 1;
 	}
 	else if(!debug_pesbutton->Down){
-//		Debug_SendStr("Down is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 2){
 			ssd1306_SetCursor(75, 53);
@@ -232,7 +355,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 2;
 	}
 	else if(!debug_pesbutton->Right){
-//		Debug_SendStr("Right is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 3){
 			ssd1306_SetCursor(75, 53);
@@ -243,7 +365,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 3;
 	}
 	else if(!debug_pesbutton->Left){
-//		Debug_SendStr("Left is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 4){
 			ssd1306_SetCursor(75, 53);
@@ -253,7 +374,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 4;
 	}
 	else if(!debug_pesbutton->L1){
-//		Debug_SendStr("L1 is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 5){
 			ssd1306_SetCursor(75, 53);
@@ -263,7 +383,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 5;
 	}
 	else if(!debug_pesbutton->L2){
-//		Debug_SendStr("L2 is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 6){
 			ssd1306_SetCursor(75, 53);
@@ -273,7 +392,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 6;
 	}
 	else if(!debug_pesbutton->R1){
-//		Debug_SendStr("R1 is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 7){
 			ssd1306_SetCursor(75, 53);
@@ -283,7 +401,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 7;
 	}
 	else if(!debug_pesbutton->R2){
-//		Debug_SendStr("R2 is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 8){
 			ssd1306_SetCursor(75, 53);
@@ -294,7 +411,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 8;
 	}
 	else if(!debug_pesbutton->Select){
-//		Debug_SendStr("Select is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 9){
 			ssd1306_SetCursor(75, 53);
@@ -305,7 +421,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 9;
 	}
 	else if(!debug_pesbutton->Start){
-//		Debug_SendStr("Start is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 10){
 			ssd1306_SetCursor(75, 53);
@@ -315,7 +430,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 10;
 	}
 	else if(!debug_pesbutton->Tron){
-//		Debug_SendStr("Tron is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 11){
 			ssd1306_SetCursor(75, 53);
@@ -326,7 +440,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 11;
 	}
 	else if(!debug_pesbutton->Vuong){
-//		Debug_SendStr("Vuong is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 12){
 			ssd1306_SetCursor(75, 53);
@@ -337,7 +450,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 12;
 	}
 	else if(!debug_pesbutton->Tamgiac){
-//		Debug_SendStr("Tamgiac is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 13){
 			ssd1306_SetCursor(75, 53);
@@ -347,7 +459,6 @@ static void Debug_ButtonPrintfState(void){
 		lastState = 13;
 	}
 	else if(!debug_pesbutton->X){
-//		Debug_SendStr("X is press!\n");
 		HAL_GPIO_WritePin(LED_PC13_GPIO_Port, LED_PC13_Pin, 1);
 		if( lastState != 14){
 			ssd1306_SetCursor(75, 53);
